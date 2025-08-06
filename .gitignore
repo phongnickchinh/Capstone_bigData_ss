@@ -81,11 +81,11 @@ Desktop.ini
 *.weights
 
 # Images
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.svg
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+# *.svg
 
 # Postman/Temp
 *.postman_collection.json
