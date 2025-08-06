@@ -1,0 +1,108 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.venv310/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Data outputs
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.h5
+*.db
+*.sqlite
+*.pkl
+*.joblib
+*.npy
+*.npz
+*.parquet
+*.feather
+*.sav
+
+# Model files
+*.h5
+*.hdf5
+*.pb
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.tflite
+*.mlmodel
+*.model
+*.weights
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Postman/Temp
+*.postman_collection.json
+*.tmp
+*.temp
+
+# Custom project folders
+
+# Ignore test outputs
+htmlcov/
+.coverage
+.tox/
+
+# Ignore requirements lock files
+poetry.lock
+Pipfile.lock
+
+
+ml/random_forest/rf_model/
+ml/catboost/catboost_model.cbm
