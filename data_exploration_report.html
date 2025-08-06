@@ -1,0 +1,373 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Data Exploration Report - Shipping Dataset</title>
+        <meta charset="UTF-8">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+            .container { max-width: 1200px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+            .header { text-align: center; color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 20px; margin-bottom: 30px; }
+            .section { margin: 30px 0; padding: 20px; border-left: 4px solid #3498db; background-color: #f8f9fa; }
+            .section h2 { color: #2c3e50; margin-top: 0; }
+            .metric { display: inline-block; margin: 10px 20px; padding: 15px; background-color: #3498db; color: white; border-radius: 5px; text-align: center; min-width: 150px; }
+            .metric-value { font-size: 24px; font-weight: bold; display: block; }
+            .metric-label { font-size: 12px; opacity: 0.9; }
+            .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+            .table th { background-color: #3498db; color: white; font-weight: bold; }
+            .table tr:nth-child(even) { background-color: #f2f2f2; }
+            .insight-box { background-color: #e8f6f3; border: 1px solid #1abc9c; border-radius: 5px; padding: 15px; margin: 10px 0; }
+            .warning-box { background-color: #fdf2e9; border: 1px solid #e67e22; border-radius: 5px; padding: 15px; margin: 10px 0; }
+            .success-box { background-color: #eafaf1; border: 1px solid #27ae60; border-radius: 5px; padding: 15px; margin: 10px 0; }
+            .chart-placeholder { width: 100%; height: 300px; border: 2px dashed #bdc3c7; display: flex; align-items: center; justify-content: center; color: #7f8c8d; margin: 20px 0; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📊 DATA EXPLORATION REPORT</h1>
+                <h2>Shipping Dataset Analysis</h2>
+                <p>Generated on: 2025-08-05 16:44:31</p>
+            </div>
+            
+            <div class="section">
+                <h2>📈 Dataset Overview</h2>
+                <div class="metric">
+                    <span class="metric-value">10,999</span>
+                    <span class="metric-label">Total Records</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">12</span>
+                    <span class="metric-label">Total Columns</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">59.7%</span>
+                    <span class="metric-label">On-Time Rate</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">40.3%</span>
+                    <span class="metric-label">Late Rate</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🏆 Key Performance Insights</h2>
+                <div class="success-box">
+                    <strong>🥇 Best Performing Warehouse:</strong> B 
+                    (60.2% on-time rate)
+                </div>
+                <div class="warning-box">
+                    <strong>🥉 Worst Performing Warehouse:</strong> A 
+                    (58.6% on-time rate)
+                </div>
+                <div class="insight-box">
+                    <strong>🚚 Best Shipping Mode:</strong> Flight 
+                    (60.2% on-time rate)
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📊 Statistical Summary</h2>
+                <p>Detailed statistics for numerical columns:</p>
+                <table class='table'><tr><th>Column</th><th>Mean</th><th>Median</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>
+        <tr>
+            <td>Customer_care_calls</td>
+            <td>4.05</td>
+            <td>4.00</td>
+            <td>1.14</td>
+            <td>2</td>
+            <td>7</td>
+        </tr>
+        
+        <tr>
+            <td>Customer_rating</td>
+            <td>2.99</td>
+            <td>3.00</td>
+            <td>1.41</td>
+            <td>1</td>
+            <td>5</td>
+        </tr>
+        
+        <tr>
+            <td>Cost_of_the_Product</td>
+            <td>210.20</td>
+            <td>214.00</td>
+            <td>48.06</td>
+            <td>96</td>
+            <td>310</td>
+        </tr>
+        
+        <tr>
+            <td>Prior_purchases</td>
+            <td>3.57</td>
+            <td>3.00</td>
+            <td>1.52</td>
+            <td>2</td>
+            <td>10</td>
+        </tr>
+        
+        <tr>
+            <td>Discount_offered</td>
+            <td>13.37</td>
+            <td>7.00</td>
+            <td>16.21</td>
+            <td>1</td>
+            <td>65</td>
+        </tr>
+        
+        <tr>
+            <td>Weight_in_gms</td>
+            <td>3634.02</td>
+            <td>4149.00</td>
+            <td>1635.38</td>
+            <td>1001</td>
+            <td>7846</td>
+        </tr>
+        </table>
+            </div>
+            
+            <div class="section">
+                <h2>🔗 Correlation Analysis</h2>
+                <p>Strong correlations with on-time delivery:</p>
+                <table class='table'><tr><th>Variable</th><th>Correlation with On-Time Delivery</th><th>Strength</th></tr>
+        <tr>
+            <td>Customer_care_calls</td>
+            <td>-0.0671</td>
+            <td>Very Weak</td>
+        </tr>
+        
+        <tr>
+            <td>Customer_rating</td>
+            <td>0.0131</td>
+            <td>Very Weak</td>
+        </tr>
+        
+        <tr>
+            <td>Cost_of_the_Product</td>
+            <td>-0.0736</td>
+            <td>Very Weak</td>
+        </tr>
+        
+        <tr>
+            <td>Prior_purchases</td>
+            <td>-0.0555</td>
+            <td>Very Weak</td>
+        </tr>
+        
+        <tr>
+            <td>Discount_offered</td>
+            <td>0.3971</td>
+            <td>Moderate</td>
+        </tr>
+        
+        <tr>
+            <td>Weight_in_gms</td>
+            <td>-0.2688</td>
+            <td>Weak</td>
+        </tr>
+        </table>
+            </div>
+            
+            <div class="section">
+                <h2>📋 Categorical Analysis</h2>
+                <h3>Warehouse_block</h3><table class='table'><tr><th>Value</th><th>Count</th><th>Percentage</th><th>On-Time Rate</th></tr>
+            <tr>
+                <td>F</td>
+                <td>3,666</td>
+                <td>33.3%</td>
+                <td>59.8%</td>
+            </tr>
+            
+            <tr>
+                <td>D</td>
+                <td>1,834</td>
+                <td>16.7%</td>
+                <td>59.8%</td>
+            </tr>
+            
+            <tr>
+                <td>B</td>
+                <td>1,833</td>
+                <td>16.7%</td>
+                <td>60.2%</td>
+            </tr>
+            
+            <tr>
+                <td>C</td>
+                <td>1,833</td>
+                <td>16.7%</td>
+                <td>59.7%</td>
+            </tr>
+            
+            <tr>
+                <td>A</td>
+                <td>1,833</td>
+                <td>16.7%</td>
+                <td>58.6%</td>
+            </tr>
+            </table><h3>Mode_of_Shipment</h3><table class='table'><tr><th>Value</th><th>Count</th><th>Percentage</th><th>On-Time Rate</th></tr>
+            <tr>
+                <td>Ship</td>
+                <td>7,462</td>
+                <td>67.8%</td>
+                <td>59.8%</td>
+            </tr>
+            
+            <tr>
+                <td>Flight</td>
+                <td>1,777</td>
+                <td>16.2%</td>
+                <td>60.2%</td>
+            </tr>
+            
+            <tr>
+                <td>Road</td>
+                <td>1,760</td>
+                <td>16.0%</td>
+                <td>58.8%</td>
+            </tr>
+            </table><h3>Product_importance</h3><table class='table'><tr><th>Value</th><th>Count</th><th>Percentage</th><th>On-Time Rate</th></tr>
+            <tr>
+                <td>low</td>
+                <td>5,297</td>
+                <td>48.2%</td>
+                <td>59.3%</td>
+            </tr>
+            
+            <tr>
+                <td>medium</td>
+                <td>4,754</td>
+                <td>43.2%</td>
+                <td>59.0%</td>
+            </tr>
+            
+            <tr>
+                <td>high</td>
+                <td>948</td>
+                <td>8.6%</td>
+                <td>65.0%</td>
+            </tr>
+            </table><h3>Gender</h3><table class='table'><tr><th>Value</th><th>Count</th><th>Percentage</th><th>On-Time Rate</th></tr>
+            <tr>
+                <td>F</td>
+                <td>5,545</td>
+                <td>50.4%</td>
+                <td>59.4%</td>
+            </tr>
+            
+            <tr>
+                <td>M</td>
+                <td>5,454</td>
+                <td>49.6%</td>
+                <td>59.9%</td>
+            </tr>
+            </table>
+            </div>
+            
+            <div class="section">
+                <h2>💡 Recommendations</h2>
+                <div class="insight-box">
+                    <h3>Operational Recommendations:</h3>
+                    <ul>
+                        <li>Focus on improving performance in warehouse A - lowest on-time rate</li>
+                        <li>Leverage best practices from warehouse B - highest on-time rate</li>
+                        <li>Consider prioritizing Flight shipping mode when possible</li>
+                        <li>Analyze correlation patterns to identify key performance drivers</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🔍 Data Quality Assessment</h2>
+                <table class='table'><tr><th>Column</th><th>Missing Values</th><th>Missing %</th><th>Unique Values</th></tr>
+        <tr>
+            <td>ID</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>10,999</td>
+        </tr>
+        
+        <tr>
+            <td>Warehouse_block</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>5</td>
+        </tr>
+        
+        <tr>
+            <td>Mode_of_Shipment</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>3</td>
+        </tr>
+        
+        <tr>
+            <td>Customer_care_calls</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>6</td>
+        </tr>
+        
+        <tr>
+            <td>Customer_rating</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>5</td>
+        </tr>
+        
+        <tr>
+            <td>Cost_of_the_Product</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>215</td>
+        </tr>
+        
+        <tr>
+            <td>Prior_purchases</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>8</td>
+        </tr>
+        
+        <tr>
+            <td>Product_importance</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>3</td>
+        </tr>
+        
+        <tr>
+            <td>Gender</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>2</td>
+        </tr>
+        
+        <tr>
+            <td>Discount_offered</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>65</td>
+        </tr>
+        
+        <tr>
+            <td>Weight_in_gms</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>4,034</td>
+        </tr>
+        
+        <tr>
+            <td>Reached.on.Time_Y.N</td>
+            <td>0</td>
+            <td>0.00%</td>
+            <td>2</td>
+        </tr>
+        </table>
+            </div>
+            
+        </div>
+    </body>
+    </html>
+    
