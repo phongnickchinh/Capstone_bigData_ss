@@ -21,6 +21,10 @@ def init_spark():
 def compare_feature_importance():
     """
     So sánh độ quan trọng của các đặc trưng từ Random Forest và phân tích tương quan
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("Đang so sánh độ quan trọng của các đặc trưng...")
     
@@ -130,7 +134,7 @@ def compare_feature_importance():
             
             ax.set_xlabel('Đặc trưng')
             ax.set_ylabel('Độ quan trọng (đã chuẩn hóa)')
-            ax.set_title('So sánh độ quan trọng của các đặc trưng')
+            ax.set_title('So sánh độ quan trọng của các đặc trưng - Dự đoán đơn hàng trễ')
             ax.set_xticks(x)
             ax.set_xticklabels(compare_df['Feature'], rotation=45, ha='right')
             ax.legend()

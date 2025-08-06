@@ -46,8 +46,13 @@ def load_data():
 def prepare_features(train_df, test_df):
     """
     Chuẩn bị features cho mô hình
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("Đang chuẩn bị features...")
+    print("Biến mục tiêu: 1 = đơn hàng KHÔNG đến đúng hạn (bị trễ), 0 = đơn hàng đến đúng hạn")
     
     # Xác định các loại cột
     categorical_cols = ["Warehouse_block", "Mode_of_Shipment", "Product_importance", "Gender"]
@@ -112,8 +117,13 @@ def train_catboost_model(X_train, y_train, X_test, y_test, categorical_cols):
 def evaluate_model(model, X_train, y_train, X_test, y_test, categorical_cols):
     """
     Đánh giá mô hình trên tập huấn luyện và kiểm tra
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("Đang đánh giá mô hình...")
+    print("Mô hình dự đoán: 1 = đơn hàng trễ, 0 = đơn hàng đúng hạn")
     
     # Dự đoán xác suất và nhãn
     train_probs = model.predict_proba(X_train)[:, 1]
@@ -138,6 +148,7 @@ def evaluate_model(model, X_train, y_train, X_test, y_test, categorical_cols):
     
     # In kết quả
     print("\n===== KẾT QUẢ ĐÁNH GIÁ =====")
+    print("Mô hình dự đoán: 1 = đơn hàng trễ, 0 = đơn hàng đúng hạn")
     print(f"Tập huấn luyện - AUC: {train_auc:.4f}, Accuracy: {train_accuracy:.4f}, F1: {train_f1:.4f}")
     print(f"Tập kiểm tra - AUC: {test_auc:.4f}, Accuracy: {test_accuracy:.4f}, F1: {test_f1:.4f}")
     
@@ -145,18 +156,18 @@ def evaluate_model(model, X_train, y_train, X_test, y_test, categorical_cols):
     test_cm = confusion_matrix(y_test, test_preds)
     
     print("\n===== CONFUSION MATRIX (TEST) =====")
-    print("Predicted / Actual  |  0 (Không đúng hạn)  |  1 (Đúng hạn)")
-    print(f"0 (Không đúng hạn)  |  {test_cm[0][0]}  |  {test_cm[0][1]}")
-    print(f"1 (Đúng hạn)        |  {test_cm[1][0]}  |  {test_cm[1][1]}")
+    print("Predicted / Actual  |  0 (Đúng hạn)  |  1 (Không đúng hạn/Trễ)")
+    print(f"0 (Đúng hạn)        |  {test_cm[0][0]}  |  {test_cm[0][1]}")
+    print(f"1 (Không đúng hạn/Trễ)  |  {test_cm[1][0]}  |  {test_cm[1][1]}")
     
     # In classification report
     print("\n===== CLASSIFICATION REPORT =====")
     print(classification_report(y_test, test_preds, 
-                              target_names=["Không đúng hạn", "Đúng hạn"]))
+                              target_names=["Đúng hạn", "Không đúng hạn/Trễ"]))
     
     # Lưu kết quả đánh giá để so sánh với các mô hình khác
     results_df = pd.DataFrame({
-        'Model': ['CatBoost'],
+        'Model': ['CatBoost - Dự đoán đơn hàng trễ'],
         'AUC': [test_auc],
         'Accuracy': [test_accuracy],
         'F1 Score': [test_f1],
@@ -231,6 +242,9 @@ def extract_feature_importance(model, X_train):
 def plot_confusion_matrix(confusion_matrix_data):
     """
     Vẽ confusion matrix
+    
+    1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    0: Đơn hàng đến đúng hạn
     """
     plt.figure(figsize=(8, 6))
     sns.heatmap(
@@ -238,12 +252,12 @@ def plot_confusion_matrix(confusion_matrix_data):
         annot=True, 
         fmt='d', 
         cmap='Blues',
-        xticklabels=["Không đúng hạn", "Đúng hạn"],
-        yticklabels=["Không đúng hạn", "Đúng hạn"]
+        xticklabels=["Đúng hạn (0)", "Không đúng hạn/Trễ (1)"],
+        yticklabels=["Đúng hạn (0)", "Không đúng hạn/Trễ (1)"]
     )
     plt.xlabel('Giá trị thực tế')
     plt.ylabel('Giá trị dự đoán')
-    plt.title('Confusion Matrix - CatBoost')
+    plt.title('Confusion Matrix - CatBoost - Dự đoán đơn hàng trễ')
     plt.tight_layout()
     plt.savefig('ml/catboost/catboost_confusion_matrix.png', dpi=300)
     plt.close()
@@ -253,13 +267,17 @@ def plot_confusion_matrix(confusion_matrix_data):
 def plot_feature_importance(importance_df):
     """
     Vẽ biểu đồ độ quan trọng của các đặc trưng
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     plt.figure(figsize=(12, 8))
     top_features = importance_df.head(15)
     
     # Vẽ biểu đồ
     sns.barplot(x='Importance', y='Feature', data=top_features, palette='viridis')
-    plt.title('Top 15 đặc trưng quan trọng nhất - CatBoost', fontsize=14)
+    plt.title('Top 15 đặc trưng quan trọng nhất - CatBoost - Dự đoán đơn hàng trễ', fontsize=14)
     plt.xlabel('Độ quan trọng', fontsize=12)
     plt.ylabel('Đặc trưng', fontsize=12)
     plt.tight_layout()
@@ -271,6 +289,10 @@ def plot_feature_importance(importance_df):
 def plot_roc_curve(y_test, y_probs):
     """
     Vẽ đường cong ROC
+    
+    Đường cong ROC cho mô hình dự đoán đơn hàng trễ:
+    - Class 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - Class 0: Đơn hàng đến đúng hạn
     """
     fpr, tpr, _ = roc_curve(y_test, y_probs)
     roc_auc = sk_auc(fpr, tpr)
@@ -282,7 +304,7 @@ def plot_roc_curve(y_test, y_probs):
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic - CatBoost')
+    plt.title('ROC Curve - CatBoost - Dự đoán đơn hàng trễ')
     plt.legend(loc='lower right')
     plt.savefig('ml/catboost/catboost_roc_curve.png', dpi=300)
     plt.close()
@@ -292,6 +314,10 @@ def plot_roc_curve(y_test, y_probs):
 def plot_performance_metrics(evaluation_results):
     """
     Vẽ biểu đồ hiển thị các chỉ số hiệu suất
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     metrics = ['AUC', 'Accuracy', 'F1 Score', 'Precision', 'Recall']
     train_values = [
@@ -319,7 +345,7 @@ def plot_performance_metrics(evaluation_results):
     
     ax.set_ylim([0, 1.1])
     ax.set_ylabel('Score')
-    ax.set_title('Chỉ số hiệu suất của mô hình CatBoost')
+    ax.set_title('Chỉ số hiệu suất của mô hình CatBoost - Dự đoán đơn hàng trễ')
     ax.set_xticks(x)
     ax.set_xticklabels(metrics)
     ax.legend()
@@ -358,6 +384,10 @@ def save_model(model, model_path):
 def main():
     """
     Hàm chính để thực hiện toàn bộ quá trình
+    
+    Mô hình dự đoán đơn hàng có trễ hay không:
+    - 1: Đơn hàng trễ (KHÔNG đến đúng hạn)
+    - 0: Đơn hàng đúng hạn
     """
     # Đọc dữ liệu
     train_df, test_df = load_data()

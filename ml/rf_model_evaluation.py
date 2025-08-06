@@ -63,6 +63,7 @@ def load_data_and_model(spark, model_path):
         test_df = test_df.drop("ID")
     
     # Đổi tên cột để tránh lỗi với dấu chấm
+    # Biến mục tiêu: 1 = đơn hàng KHÔNG đến đúng hạn (bị trễ), 0 = đơn hàng đến đúng hạn
     target_col = "Reached.on.Time_Y.N"
     target_col_new = "Reached_on_Time_Y_N"
     
@@ -86,8 +87,13 @@ def load_data_and_model(spark, model_path):
 def evaluate_model_detailed(model, test_df):
     """
     Đánh giá chi tiết mô hình
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("\nĐang đánh giá mô hình chi tiết...")
+    print("Mô hình dự đoán: 1 = đơn hàng trễ, 0 = đơn hàng đúng hạn")
     
     # Dự đoán trên tập kiểm tra
     predictions = model.transform(test_df)
@@ -155,9 +161,9 @@ def evaluate_model_detailed(model, test_df):
     confusion_matrix = metrics.confusionMatrix().toArray()
     
     print("\n===== CONFUSION MATRIX =====")
-    print("Predicted / Actual  |  0 (Không đúng hạn)  |  1 (Đúng hạn)")
-    print(f"0 (Không đúng hạn)  |  {int(confusion_matrix[0][0])}  |  {int(confusion_matrix[0][1])}")
-    print(f"1 (Đúng hạn)        |  {int(confusion_matrix[1][0])}  |  {int(confusion_matrix[1][1])}")
+    print("Predicted / Actual  |  0 (Đúng hạn)  |  1 (Không đúng hạn/Trễ)")
+    print(f"0 (Đúng hạn)        |  {int(confusion_matrix[0][0])}  |  {int(confusion_matrix[0][1])}")
+    print(f"1 (Không đúng hạn/Trễ)  |  {int(confusion_matrix[1][0])}  |  {int(confusion_matrix[1][1])}")
     
     # Chuyển đổi dự đoán sang pandas để vẽ biểu đồ
     pandas_predictions = predictions.select("Reached_on_Time_Y_N", "prediction", "probability").toPandas()
@@ -167,13 +173,16 @@ def evaluate_model_detailed(model, test_df):
 def plot_confusion_matrix(confusion_matrix):
     """
     Vẽ confusion matrix
+    
+    1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    0: Đơn hàng đến đúng hạn
     """
     plt.figure(figsize=(8, 6))
     plt.imshow(confusion_matrix, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title('Confusion Matrix')
     plt.colorbar()
     
-    classes = ["Không đúng hạn", "Đúng hạn"]
+    classes = ["Đúng hạn (0)", "Không đúng hạn/Trễ (1)"]
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45)
     plt.yticks(tick_marks, classes)
@@ -231,7 +240,7 @@ def extract_feature_importance(model):
     plt.barh(feature_importance_df['Feature'][:15], feature_importance_df['Importance'][:15], color='skyblue')
     plt.xlabel('Độ quan trọng')
     plt.ylabel('Đặc trưng')
-    plt.title('Top 15 đặc trưng quan trọng nhất - Random Forest')
+    plt.title('Top 15 đặc trưng quan trọng nhất - Dự đoán đơn hàng trễ')
     plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.savefig('ml/random_forest/rf_feature_importance.png', dpi=300)
@@ -247,6 +256,10 @@ def extract_feature_importance(model):
 def plot_roc_curve(pandas_predictions, auc):
     """
     Vẽ đường cong ROC
+    
+    Đường cong ROC cho mô hình dự đoán đơn hàng trễ:
+    - Class 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - Class 0: Đơn hàng đến đúng hạn
     """
     from sklearn.metrics import roc_curve, auc as sk_auc
     
@@ -263,7 +276,7 @@ def plot_roc_curve(pandas_predictions, auc):
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic')
+    plt.title('ROC Curve - Dự đoán đơn hàng trễ')
     plt.legend(loc='lower right')
     plt.savefig('ml/random_forest/rf_roc_curve.png', dpi=300)
     plt.close()
@@ -271,6 +284,10 @@ def plot_roc_curve(pandas_predictions, auc):
 def plot_performance_metrics(auc, accuracy, f1, precision, recall):
     """
     Vẽ biểu đồ hiển thị các chỉ số hiệu suất
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     metrics = ['AUC', 'Accuracy', 'F1 Score', 'Precision', 'Recall']
     values = [auc, accuracy, f1, precision, recall]
@@ -279,7 +296,7 @@ def plot_performance_metrics(auc, accuracy, f1, precision, recall):
     plt.bar(metrics, values, color=['blue', 'green', 'red', 'purple', 'orange'])
     plt.ylim([0, 1.1])
     plt.ylabel('Score')
-    plt.title('Chỉ số hiệu suất của mô hình Random Forest')
+    plt.title('Chỉ số hiệu suất của mô hình Random Forest - Dự đoán đơn hàng trễ')
     
     # Thêm giá trị lên đỉnh thanh
     for i, v in enumerate(values):
@@ -292,6 +309,10 @@ def plot_performance_metrics(auc, accuracy, f1, precision, recall):
 def main():
     """
     Hàm chính để thực hiện đánh giá mô hình
+    
+    Mô hình dự đoán đơn hàng có trễ hay không:
+    - 1: Đơn hàng trễ (KHÔNG đến đúng hạn)
+    - 0: Đơn hàng đúng hạn
     """
     # Khởi tạo Spark
     spark = init_spark()

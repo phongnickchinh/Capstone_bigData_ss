@@ -92,6 +92,7 @@ def prepare_features(train_df, test_df):
     print("Đang chuẩn bị features...")
     
     # Đổi tên cột để tránh lỗi với dấu chấm
+    # Biến mục tiêu: 1 = đơn hàng KHÔNG đến đúng hạn (bị trễ), 0 = đơn hàng đến đúng hạn
     target_col = "Reached.on.Time_Y.N"
     target_col_new = "Reached_on_Time_Y_N"
     
@@ -109,8 +110,8 @@ def prepare_features(train_df, test_df):
     # Xác định các loại cột
     categorical_cols = ["Warehouse_block", "Mode_of_Shipment", "Product_importance", "Gender"]
     numeric_cols = [col for col in train_df.columns 
-                   if col not in categorical_cols 
-                   and col != target_col_new]
+                if col not in categorical_cols 
+                and col != target_col_new]
     
     #bỏ đi các cột phân loại do trước đó không có đóng góp cho mô hình
     # Chọn các cột số để tạo features
@@ -208,6 +209,10 @@ def train_with_cross_validation(pipeline, rf, train_df):
 def evaluate_model(model, train_df, test_df):
     """
     Đánh giá mô hình trên tập huấn luyện và kiểm tra
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("Đang đánh giá mô hình...")
     
@@ -264,6 +269,7 @@ def evaluate_model(model, train_df, test_df):
     test_recall = evaluator_recall.evaluate(test_predictions)
     
     print("\n===== KẾT QUẢ ĐÁNH GIÁ =====")
+    print("Mô hình dự đoán: 1 = đơn hàng trễ, 0 = đơn hàng đúng hạn")
     print(f"Tập huấn luyện - AUC: {train_auc:.4f}, Accuracy: {train_acc:.4f}, F1: {train_f1:.4f}")
     print(f"Tập kiểm tra - AUC: {test_auc:.4f}, Accuracy: {test_acc:.4f}, F1: {test_f1:.4f}")
     
@@ -337,6 +343,9 @@ def save_model(model, model_path):
 def main():
     """
     Hàm chính để thực hiện toàn bộ quá trình
+    Mô hình dự đoán đơn hàng có trễ hay không:
+    - 1: Đơn hàng trễ (KHÔNG đến đúng hạn)
+    - 0: Đơn hàng đúng hạn
     """
     # Khởi tạo Spark
     spark = init_spark()
@@ -370,7 +379,7 @@ def main():
         # Tạo file kết quả để so sánh các mô hình
         import pandas as pd
         results_df = pd.DataFrame({
-            'Model': ['Random Forest'],
+            'Model': ['Random Forest - Dự đoán đơn hàng trễ'],
             'AUC': [metrics['test']['auc']],
             'Accuracy': [metrics['test']['accuracy']],
             'F1 Score': [metrics['test']['f1']],

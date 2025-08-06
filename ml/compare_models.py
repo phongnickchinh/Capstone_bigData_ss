@@ -36,6 +36,10 @@ def load_models_and_results():
 def compare_model_performance():
     """
     So sánh hiệu suất giữa các mô hình
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("\n===== SO SÁNH HIỆU SUẤT CÁC MÔ HÌNH =====")
     
@@ -60,7 +64,7 @@ def compare_model_performance():
     
     # Vẽ biểu đồ
     sns.barplot(x='Metric', y='Score', hue='Model', data=df_melted)
-    plt.title('So sánh hiệu suất giữa các mô hình', fontsize=16)
+    plt.title('So sánh hiệu suất giữa các mô hình - Dự đoán đơn hàng trễ', fontsize=16)
     plt.ylim(0, 1)
     plt.legend(title='Mô hình')
     plt.tight_layout()
@@ -145,6 +149,10 @@ def collect_model_metrics():
 def plot_feature_importance_comparison():
     """
     So sánh độ quan trọng của các đặc trưng giữa các mô hình
+    
+    Mô hình dự đoán:
+    - 1: Đơn hàng KHÔNG đến đúng hạn (bị trễ)
+    - 0: Đơn hàng đến đúng hạn
     """
     print("\n===== SO SÁNH ĐỘ QUAN TRỌNG CỦA CÁC ĐẶC TRƯNG =====")
     
@@ -201,7 +209,7 @@ def plot_feature_importance_comparison():
     
     ax.set_xlabel('Đặc trưng', fontsize=12)
     ax.set_ylabel('Độ quan trọng (đã chuẩn hóa)', fontsize=12)
-    ax.set_title('So sánh độ quan trọng của các đặc trưng giữa Random Forest và CatBoost', fontsize=14)
+    ax.set_title('So sánh độ quan trọng của các đặc trưng - Dự đoán đơn hàng trễ', fontsize=14)
     ax.set_xticks(x)
     ax.set_xticklabels(top_features['Feature'], rotation=45, ha='right')
     ax.legend()
@@ -217,6 +225,10 @@ def plot_feature_importance_comparison():
 def main():
     """
     Hàm chính để thực hiện so sánh mô hình
+    
+    Mô hình dự đoán đơn hàng có trễ hay không:
+    - 1: Đơn hàng trễ (KHÔNG đến đúng hạn)
+    - 0: Đơn hàng đúng hạn
     """
     print("===== BẮT ĐẦU SO SÁNH CÁC MÔ HÌNH =====")
     
